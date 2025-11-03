@@ -61,6 +61,12 @@ class ViewModelUnitTest {
         assert(viewModel.uiState.value.grid.all { row -> row.all { cell -> cell == Play.None } })
     }
 
+    @Test
+    fun test_fail() {
+        val viewModel: TicTacToeViewModel = getKoin().get()
+        assertEquals(Player.O, viewModel.uiState.value.currentPlayer)
+    }
+
     /**
      * Test that a player cannot play on a cell that has already been used
      */
