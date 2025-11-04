@@ -1,17 +1,19 @@
 # Tic Tac Toe
 
-![Tic Tac Toe](Kata_TicTacToe.png?raw=true "Tic Tac Toe")
+![Screenshot](images/Screenshot_TicTacToe.jpg?raw=true "Screenshot")
 
 A simple game of Tic Tac Toe made in Jetpack Compose.
 
 ## Building & Running
 
-This project can easily be run with either Android Studio or IntelliJ IDEA.
-Simply open the project with either IDE, sync gradle,
-and run the app on either a virtual or physical device.
+After cloning this repo, you can easily build the app with either Android Studio or IntelliJ IDEA.
+Simply open the project with either IDE, sync gradle to get the dependencies,
+then build and run the app on either a virtual or physical device.
 
-Tests can be run by going to the VM test file, or by adding any of the following (gradle) configurations:
-- app:test
+The final result should look like the screenshot above.
+
+Tests can be run by going to the VM test file, or by adding any of the following gradle run configurations:
+- :app:test
 - :app:testDebugUnitTest --tests "com.dev2012.tictactoe.ViewModelUnitTest"
 
 ## For Reviewers
@@ -21,7 +23,7 @@ What was used used:
 - Jetpack Compose
 - MVVM with ViewModel and StateFlows
 - DI with koin
-- CI with GitHub Actions
+- CI with GitHub Actions, with test report artifacts
 
 Important files are in:
 - /app/src/main/java/com/dev2012/tictactoe
