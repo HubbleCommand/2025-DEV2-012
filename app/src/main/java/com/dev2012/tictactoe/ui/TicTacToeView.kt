@@ -79,7 +79,7 @@ fun TicTacToeElement(
                     else -> null
                 }
                 pth?.let {
-                    drawPath(pth, color = Color.White, style = Stroke(width = 12f))
+                    drawPath(pth, color = Color.Gray, style = Stroke(width = 12f))
                 }
             }
     ) { }
