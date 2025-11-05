@@ -1,6 +1,7 @@
 package com.dev2012.tictactoe.ui
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,9 +25,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -35,10 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.graphics.shapes.RoundedPolygon
-import androidx.graphics.shapes.circle
-import androidx.graphics.shapes.toPath
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dev2012.tictactoe.R
 import com.dev2012.tictactoe.TAGS
 import org.koin.androidx.compose.koinViewModel
@@ -51,41 +46,25 @@ fun TicTacToeElement(
     // it's what Compose uses, and it would be worse to pass the VM
     onClick: () -> Unit,
 ) {
-    //While Box is usable, it requires a MutableInteractionSource & other linking
-    TextButton(
-        onClick = {
-            if (value == Play.None) {
-                onClick()
-            }
-        },
+    Box(
         modifier = modifier
+            .clickable(enabled = value == Play.None, onClick = onClick)
             //drawWithCache could be used... but we aren't doing anything heavy here
             .drawBehind {
-                if (value == Play.None) {
-                    return@drawBehind
-                }
-
-                val pth = when (value) {
-                    Play.O -> {
-                        val circlePolygon = RoundedPolygon.circle(
-                            numVertices = 64,
-                            radius = size.minDimension / 2f - 12f, centerX = size.width / 2f, centerY = size.height / 2f
-                        )
-                        circlePolygon.toPath().asComposePath()
+                when (value) {
+                    Play.O -> drawCircle(
+                        color = Color.Gray,
+                        style = Stroke(width = 12f),
+                        radius = size.minDimension / 2f - 12f
+                    )
+                    Play.X -> {
+                        drawLine(Color.Gray, Offset(0f, 0f), Offset(size.width, size.height), 12f)
+                        drawLine(Color.Gray, Offset(size.width, 0f), Offset(0f, size.height), 12f)
                     }
-                    Play.X -> Path().apply {
-                        moveTo(0f, 0f)
-                        lineTo(size.minDimension, size.minDimension)
-                        moveTo(size.minDimension, 0f)
-                        lineTo(0f, size.minDimension)
-                    }
-                    else -> null
-                }
-                pth?.let {
-                    drawPath(pth, color = Color.Gray, style = Stroke(width = 12f))
+                    else -> Unit
                 }
             }
-    ) { }
+    )
 }
 
 @Composable
@@ -93,7 +72,7 @@ fun TicTacToeEndDialog(
     text: String,
     onClose: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onClose() }) {
+    Dialog(onDismissRequest = onClose) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,9 +87,7 @@ fun TicTacToeEndDialog(
                     .wrapContentSize(Alignment.Center),
                 textAlign = TextAlign.Center,
             )
-            Button(onClick = {
-                onClose()
-            }) {
+            Button(onClick = onClose) {
                 Text(stringResource(R.string.reset))
             }
         }
