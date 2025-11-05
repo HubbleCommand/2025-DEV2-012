@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +40,8 @@ import androidx.graphics.shapes.circle
 import androidx.graphics.shapes.toPath
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dev2012.tictactoe.R
+import com.dev2012.tictactoe.TAGS
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TicTacToeElement(
@@ -115,7 +118,7 @@ fun TicTacToeEndDialog(
 }
 
 @Composable
-fun TicTacToeGameView(modifier: Modifier, vm: TicTacToeViewModel = viewModel()) {
+fun TicTacToeGameView(modifier: Modifier = Modifier, vm: TicTacToeViewModel = koinViewModel()) {
     val state by vm.uiState.collectAsState()
 
     if (state.winState != WinState.None) {
@@ -140,6 +143,7 @@ fun TicTacToeGameView(modifier: Modifier, vm: TicTacToeViewModel = viewModel()) 
                     repeat(state.grid[col].size) { row ->
                         TicTacToeElement(
                             Modifier
+                                .testTag("$col $row")
                                 .size(itemSize)
                                 .padding(4.dp), value = state.grid[col][row]
                         ) {
@@ -155,7 +159,11 @@ fun TicTacToeGameView(modifier: Modifier, vm: TicTacToeViewModel = viewModel()) 
                 )
             }
             Spacer(modifier = Modifier.size(30.dp))
-            Text("${stringResource(R.string.player)}: ${state.currentPlayer}", textAlign = TextAlign.Center)
+            Text(
+                text = "${stringResource(R.string.player)}: ${state.currentPlayer}",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.testTag(TAGS.PLAYER_TEXT)
+            )
         }
     }
 }

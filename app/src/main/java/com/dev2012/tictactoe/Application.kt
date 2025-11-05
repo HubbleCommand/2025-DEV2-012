@@ -11,6 +11,10 @@ val appModule = module {
     viewModel { TicTacToeViewModel() }
 }
 
+object TAGS {
+    const val PLAYER_TEXT = "PLAYER_TEXT"
+}
+
 class TicTacToeApplication: Application() {
     override fun onCreate() {
         super.onCreate()
